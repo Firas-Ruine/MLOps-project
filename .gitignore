@@ -1,1 +1,3 @@
 data/
+data_ingestion\facebook_comments\results
+__pycache__
