@@ -2,3 +2,5 @@ data/
 src/data_ingestion/facebook_comments/results
 __pycache__
 .venv
+venv
+src/data_ingestion/youtube_comments/results

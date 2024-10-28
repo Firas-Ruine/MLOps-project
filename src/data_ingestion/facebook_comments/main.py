@@ -1,6 +1,7 @@
 import os
 import utils.facebook_comments_scraping as fcs
 import utils.facebook_comments_classification as fcc
+from utils.clean_classified_comments import cleanClassifiedComments
 
 # Get the directory of the current script file
 base_path = os.path.dirname(os.path.abspath(__file__))
@@ -9,6 +10,7 @@ base_path = os.path.dirname(os.path.abspath(__file__))
 SCRAPING_INPUT = os.path.join(base_path, 'inputs', 'posts_ids.csv')
 SCRAPING_RESULT = os.path.join(base_path, 'results', 'facebook_comments.csv')
 CLASSIFICATION_RESULT = os.path.join(base_path, 'results', 'facebook_comments_classified.csv')
+CLEANING_RESULT = os.path.join(base_path, 'results', 'facebook_comments_cleaned.csv')
 
 def main():
     # SCRAPING
@@ -28,6 +30,8 @@ def main():
             print("Classification of comments aborted.")
     else:
         fcc.main(SCRAPING_RESULT, CLASSIFICATION_RESULT)
+    cleanClassifiedComments(CLASSIFICATION_RESULT, CLEANING_RESULT)
+
 
 if __name__ == '__main__':
     main()
