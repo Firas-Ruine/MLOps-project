@@ -7,3 +7,5 @@ numpy
 requests
 lxml_html_clean
 facebook-scraper
+google-api-python-client
+neattext
