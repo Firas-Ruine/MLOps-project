@@ -9,3 +9,7 @@ lxml_html_clean
 facebook-scraper
 google-api-python-client
 neattext
+pandas
+scikit-learn
+joblib
+flask

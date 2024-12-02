@@ -6,7 +6,7 @@ from utils.get_video_comments import getVideoComments
 from googleapiclient.discovery import build
 
 # Your YouTube Data API key
-API_KEY = ''
+API_KEY = 'AIzaSyDTWzUmomxive8x9Q_GYmF9CTxmzDJ2qVg'
 
 # Initialize YouTube API client
 youtube = build('youtube', 'v3', developerKey=API_KEY)
@@ -20,21 +20,25 @@ def StoreComments(scraping_input_path, scraping_result_path):
     # Prepare a dictionary to store comments
     comments_dict = {}
 
+        # Iterate through the rows of the DataFrame
     for index, row in df.iterrows():
-        channel_url = row['channel_url']
-        channel_id = getChannelId(channel_url)
-        
-        if channel_id:
-            video_id = getLatestVideoId(channel_id, youtube)
-            if video_id:
-                comments = getVideoComments(video_id, youtube)
-                comments_dict[channel_url] = comments
-            else:
-                print(f"No videos found for channel: {channel_url}")
+        video_url = row['video_url']
+        print("Reading video URL ...")
+        print(video_url)
+
+        # Extract the video ID from the video URL
+        video_id = video_url.split("v=")[-1].split("&")[0]
+        print("Extracted video ID:")
+        print(video_id)
+
+        if video_id:
+            # Fetch comments for the video
+            comments = getVideoComments(video_id, youtube)
+            comments_dict[video_url] = comments
         else:
-            print(f"Invalid channel URL: {channel_url}")
+            print(f"Invalid video URL: {video_url}")
 
     # Print or save comments
-    for channel_url, comments in comments_dict.items():
-        print(f"Comments for {channel_url}:")
+    for video_url, comments in comments_dict.items():
+        print(f"Comments for {video_url}:")
         writeToCSV(comments, scraping_result_path)
