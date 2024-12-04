@@ -13,3 +13,5 @@ pandas
 scikit-learn
 joblib
 flask
+mlflow
+seaborn
