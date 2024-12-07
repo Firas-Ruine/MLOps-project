@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Youtube {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+  }
+  input[type="text"]:focus {
+    border: 3px solid #555;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="row min-vh-80 h-100">
+    <div class="col-12">
+      <form action="/youtube" method="POST">
+        <label for="youtube-url">YouTube</label>
+        <input id="youtube-url" name="youtube_url" required="" type="text" class="form-control mb-3">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+      <!-- Display Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul class="list-unstyled">
+            {% for category, message in messages %}
+              <li class="alert alert-{{ category }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
