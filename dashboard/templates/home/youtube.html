@@ -30,7 +30,7 @@
         <button type="submit" class="btn btn-primary">Send</button>
       </form>
       <!-- Display Flash Messages -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% with messages = comments %}
         {% if messages %}
           <ul class="list-unstyled">
             {% for category, message in messages %}

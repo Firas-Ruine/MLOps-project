@@ -10,12 +10,12 @@ from flask_login import (
     logout_user
 )
 
-from apps import db, login_manager
-from apps.authentication import blueprint
-from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users
+from dashboard import db, login_manager
+from dashboard.authentication import blueprint
+from dashboard.authentication.forms import LoginForm, CreateAccountForm
+from dashboard.authentication.models import Users
 
-from apps.authentication.util import verify_pass
+from dashboard.authentication.util import verify_pass
 
 
 @blueprint.route('/')
