@@ -1,4 +1,4 @@
-data/
+data/train.csv
 src/data_ingestion/facebook_comments/results
 __pycache__
 .venv
@@ -36,4 +36,4 @@ package-lock.json
 
 dashboard/static/assets/node_modules
 dashboard/static/assets/yarn.lock
-dashboard/static/assets/.temp
+dashboard/static/assets/.temp/mega-remote
