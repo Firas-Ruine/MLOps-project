@@ -43,7 +43,7 @@ def youtube_route():
                 response = youtube.commentThreads().list(
                     part='snippet',
                     videoId=video_id,
-                    maxResults=10
+                    maxResults=100
                 ).execute()
 
                 for item in response.get('items', []):
