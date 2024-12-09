@@ -1,0 +1,67 @@
+name: Continuous Training
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Run every day at midnight
+  workflow_dispatch: # Run manually
+  push:
+    branches:
+      - main
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install dvc[all]
+          pip install -r requirements.txt
+
+      # Step 4: Set up Google Drive Authentication
+      - name: Configure Google Drive credentials
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > credentials.json
+
+      # Step 5: Pull dataset from DVC remote (Google Drive)
+      - name: Pull dataset
+        run: |
+          dvc remote modify --local myremote gdrive_use_service_account true
+          dvc remote modify --local myremote gdrive_service_account_json_path credentials.json
+          dvc pull
+
+      # Step 6: Train the model
+      - name: Train the model
+        run: |
+          python src/models/train_model.py
+
+      # Step 7: Track changes with DVC
+      - name: Track model changes
+        run: |
+          dvc add model/  # Update path to your model
+          git add model.dvc
+          git commit -m "Update model artifacts after training"
+
+      # Step 8: Push changes to remote repository
+      - name: Push changes to GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin main
+
+      # Step 9: Push DVC-tracked files to remote storage
+      - name: Push DVC artifacts
+        run: dvc push
