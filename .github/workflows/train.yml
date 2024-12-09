@@ -33,17 +33,15 @@ jobs:
       # Step 4: Configure Google Drive credentials
       - name: Configure Google Drive credentials
         env:
-            GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
-            GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
         run: |
-            dvc remote modify storage gdrive_client_id $GDRIVE_CLIENT_ID
-            dvc remote modify storage gdrive_client_secret $GDRIVE_CLIENT_SECRET
+          dvc remote modify storage gdrive_client_id $GDRIVE_CLIENT_ID
+          dvc remote modify storage gdrive_client_secret $GDRIVE_CLIENT_SECRET
 
       # Step 5: Pull dataset from DVC remote (Google Drive)
       - name: Pull dataset
         run: |
-          dvc remote modify --local storage gdrive_use_service_account true
-          dvc remote modify --local storage gdrive_service_account_json_path credentials.json
           dvc pull
 
       # Step 6: Train the model
