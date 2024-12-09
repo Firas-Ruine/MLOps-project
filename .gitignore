@@ -37,3 +37,4 @@ package-lock.json
 dashboard/static/assets/node_modules
 dashboard/static/assets/yarn.lock
 dashboard/static/assets/.temp/mega-remote
+google_services.json
