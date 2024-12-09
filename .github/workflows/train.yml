@@ -30,11 +30,14 @@ jobs:
           pip install dvc[all]
           pip install -r requirements.txt
 
-      # Step 4: Set up Google Drive Authentication
+      # Step 4: Configure Google Drive credentials
       - name: Configure Google Drive credentials
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > credentials.json
+            GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+            GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+        run: |
+            dvc remote modify storage gdrive_client_id $GDRIVE_CLIENT_ID
+            dvc remote modify storage gdrive_client_secret $GDRIVE_CLIENT_SECRET
 
       # Step 5: Pull dataset from DVC remote (Google Drive)
       - name: Pull dataset
