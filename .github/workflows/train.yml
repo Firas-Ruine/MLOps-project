@@ -30,14 +30,17 @@ jobs:
           pip install dvc[all]
           pip install -r requirements.txt
 
-      # Step 4: Configure Google Drive credentials
+      # Step 4: Configure Service Account for Google Drive
       - name: Configure Google Drive credentials
         env:
-          GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
-          GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+        run: echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}" > service_account.json
+
+      # Step 5: Configure DVC Remote
+      - name: Configure DVC Remote for Google Drive
         run: |
-          dvc remote modify storage gdrive_client_id $GDRIVE_CLIENT_ID
-          dvc remote modify storage gdrive_client_secret $GDRIVE_CLIENT_SECRET
+          dvc remote modify storage gdrive_use_service_account true
+          dvc remote modify storage gdrive_credentials_file service_account.json
 
       # Step 5: Pull dataset from DVC remote (Google Drive)
       - name: Pull dataset
