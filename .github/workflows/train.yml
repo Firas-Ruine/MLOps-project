@@ -33,10 +33,9 @@ jobs:
       # Step 4: Configure Google Drive credentials
       - name: Configure Google Drive credentials
         env:
-         GDRIVE_SERVICE_ACCOUNT_BASE64: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}
+          GDRIVE_SERVICE_ACCOUNT_BASE64: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}
         run: |
-         echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > google_services.json
-
+          echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > google_services.json
 
       # Step 5: Configure DVC Remote for Google Drive
       - name: Configure DVC Remote
@@ -44,30 +43,27 @@ jobs:
           dvc remote modify storage gdrive_use_service_account true
           dvc remote modify --local storage gdrive_service_account_json_file_path google_services.json
 
-      # Step 5: Pull dataset from DVC remote (Google Drive)
+      # Step 6: Pull dataset from DVC remote (Google Drive)
       - name: Pull dataset
         run: |
           dvc pull
 
-      # Step 6: Train the model
+      # Step 7: Append new data to the dataset
+      - name: Update dataset
+        run: |
+          dvc add train.csv
+          git add train.csv.dvc
+          git commit -m "Update train.csv with new data"
+
+      # Step 8: Push updated dataset to DVC remote
+      - name: Push updated dataset
+        run: dvc push
+
+      # Step 9: Train the model
       - name: Train the model
         run: |
           python src/models/train_model.py
 
-      # Step 7: Track changes with DVC
-      - name: Track model changes
-        run: |
-          dvc add model/  # Update path to your model
-          git add model.dvc
-          git commit -m "Update model artifacts after training"
-
-      # Step 8: Push changes to remote repository
-      - name: Push changes to GitHub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push origin main
-
-      # Step 9: Push DVC-tracked files to remote storage
+      # Step 10: Push DVC-tracked files to remote storage
       - name: Push DVC artifacts
         run: dvc push
