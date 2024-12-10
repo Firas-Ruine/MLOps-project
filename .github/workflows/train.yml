@@ -64,15 +64,27 @@ jobs:
         run: |
           python src/scripts/main.py
 
-      # Step 10: Push updated dataset to DVC remote
+      # Step 10: Add changes to dvc
+      - name: Add changes to dvc
+        run: dvc add data/train.csv
+
+      # Step 11: Add last data version to git
+      - name: Add last data version to git
+        run: git add data/train.csv.dvc
+
+      # Step 12: Commit last data version to git
+      - name: Commit last data version to git
+        run: git commit -m "add last version data"
+
+      # Step 13: Push updated dataset to DVC remote
       - name: Push updated dataset
         run: dvc push
 
-      # Step 11: Train the model
+      # Step 14: Train the model
       - name: Train the model
         run: |
           python src/models/train_model.py
 
-      # Step 12: Push DVC-tracked files to remote storage
+      # Step 15: Push DVC-tracked files to remote storage
       - name: Push DVC artifacts
         run: dvc push
