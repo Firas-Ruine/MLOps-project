@@ -51,8 +51,8 @@ jobs:
       # Step 7: Append new data to the dataset
       - name: Update dataset
         run: |
-          dvc add train.csv
-          git add train.csv.dvc
+          dvc add data/train.csv
+          git add data/train.csv.dvc
           git commit -m "Update train.csv with new data"
 
       # Step 8: Push updated dataset to DVC remote
