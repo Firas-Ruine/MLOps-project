@@ -35,7 +35,7 @@ jobs:
         env:
           GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
         run: |
-          echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}" | jq '.' > google_services.json
+          printf '%s' "${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}" > google_services.json
 
       # Step 5: Configure DVC Remote for Google Drive
       - name: Configure DVC Remote
