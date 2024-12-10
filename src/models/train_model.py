@@ -30,6 +30,6 @@ pipeline = make_pipeline(
 pipeline.fit(df['text'], df['sentiment'])
 
 # Save the model
-joblib.dump(pipeline, 'src/models/text_sentiment_model.pkl')
+joblib.dump(pipeline, 'src/models/emotion_classifier_pipe_lr.pkl')
 
-print("Model saved in 'text_sentiment_model.pkl'")
+print("Model saved in 'emotion_classifier_pipe_lr.pkl'")

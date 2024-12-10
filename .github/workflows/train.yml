@@ -54,15 +54,25 @@ jobs:
         run: |
           dvc pull
 
-      # Step 8: Push updated dataset to DVC remote
+      # Step 8: Run Scraping from youtube
+      - name: Run Scrapping from youtube
+        run: |
+          python src/data_ingestion/youtube_comments/main.py
+
+      # Step 9: Clean new data and add it to dataset
+      - name: Clean new data and add it to dataset
+        run: |
+          python src/scripts/main.py
+
+      # Step 10: Push updated dataset to DVC remote
       - name: Push updated dataset
         run: dvc push
 
-      # Step 9: Train the model
+      # Step 11: Train the model
       - name: Train the model
         run: |
           python src/models/train_model.py
 
-      # Step 10: Push DVC-tracked files to remote storage
+      # Step 12: Push DVC-tracked files to remote storage
       - name: Push DVC artifacts
         run: dvc push

@@ -3,7 +3,6 @@ src/data_ingestion/facebook_comments/results
 __pycache__
 .venv
 venv
-src/data_ingestion/youtube_comments/results
 src/dataset
 # byte-compiled / optimized / DLL files
 __pycache__/
