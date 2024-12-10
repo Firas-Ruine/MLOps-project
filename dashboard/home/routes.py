@@ -9,7 +9,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 from googleapiclient.discovery import build
 import joblib
-import os 
+import csv
 # Load the sentiment analysis model
 MODEL_PATH = 'emotion_classifier_pipe_lr.pkl'
 model = joblib.load(MODEL_PATH)
@@ -37,6 +37,10 @@ def youtube_route():
         youtube_url = request.form.get('youtube_url')
         if youtube_url:
             try:
+                with open('src/data_ingestion/youtube_comments/inputs/channels.csv', 'a', newline='\n', encoding='utf-8') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow([])
+                    writer.writerow([youtube_url])
                 # Parse video ID from URL (simplified for demonstration)
                 video_id = youtube_url.split("v=")[-1]
                 # Fetch comments using YouTube API
