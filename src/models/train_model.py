@@ -8,7 +8,7 @@ import joblib
 base_path = os.path.dirname(os.path.abspath(__file__))
 
 # Load dataset and select only 'text' and 'sentiment' columns
-df = pd.read_csv(os.path.join(base_path, '../dataset', 'train.csv'), encoding='cp1252')
+df = pd.read_csv(os.path.join(base_path, '../../data', 'train.csv'), encoding='cp1252')
 
 # Handle missing values in the 'text' column by filling them with empty strings
 df['text'] = df['text'].fillna("")
