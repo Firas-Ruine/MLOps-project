@@ -33,9 +33,10 @@ jobs:
       # Step 4: Configure Google Drive credentials
       - name: Configure Google Drive credentials
         env:
-          GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+         GDRIVE_SERVICE_ACCOUNT_BASE64: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}
         run: |
-          echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}" > google_services.json
+         echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > google_services.json
+
 
       # Step 5: Configure DVC Remote for Google Drive
       - name: Configure DVC Remote
