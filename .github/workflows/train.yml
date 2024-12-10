@@ -20,8 +20,8 @@ jobs:
       # Step 2: Set up Git user identity
       - name: Configure Git User
         run: |
-         git config --global user.name "GitHub Actions"
-         git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
       # Step 3: Set up Python environment
       - name: Set up Python
@@ -54,22 +54,15 @@ jobs:
         run: |
           dvc pull
 
-      # Step 8: Append new data to the dataset
-      - name: Update dataset
-        run: |
-          dvc add data/train.csv
-          git add data/train.csv.dvc
-          git commit -m "Update train.csv with new data"
-
-      # Step 9: Push updated dataset to DVC remote
+      # Step 8: Push updated dataset to DVC remote
       - name: Push updated dataset
         run: dvc push
 
-      # Step 10: Train the model
+      # Step 9: Train the model
       - name: Train the model
         run: |
           python src/models/train_model.py
 
-      # Step 11: Push DVC-tracked files to remote storage
+      # Step 10: Push DVC-tracked files to remote storage
       - name: Push DVC artifacts
         run: dvc push
