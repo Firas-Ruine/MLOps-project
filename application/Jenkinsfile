@@ -110,7 +110,7 @@ pipeline {
         }
         
         failure {
-            // Error handling and notifications on failure
+            // Error handling and notifications
             emailext (
                 subject: "Jenkins Pipeline Failed: ${currentBuild.fullDisplayName}",
                 body: "Pipeline failed. Check console output at ${env.BUILD_URL}",
