@@ -24,7 +24,7 @@ import mlflow
 import mlflow.sklearn
 
 # Set MLflow Tracking URI and Experiment
-MLFLOW_TRACKING_URI = "http://172.26.0.1:5003" 
+MLFLOW_TRACKING_URI = "http://172.18.0.1:5003" 
 MLFLOW_EXPERIMENT_NAME = "emotion_detection_experiment"
 
 mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)

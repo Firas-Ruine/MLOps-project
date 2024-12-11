@@ -1,15 +1,12 @@
 FROM jenkins/jenkins:lts
 
-# Install Docker inside Jenkins for agent control (optional)
+# Switch to root to install Docker
 USER root
-RUN apt-get update && apt-get install -y \
-    docker.io \
-    git \
-    python3 \
-    python3-pip && \
-    apt-get clean
 
-# Set permissions
-RUN usermod -aG docker jenkins
+# Install Docker
+RUN apt-get update && \
+    apt-get install -y docker.io && \
+    usermod -aG docker jenkins
 
+# Switch back to jenkins user
 USER jenkins
