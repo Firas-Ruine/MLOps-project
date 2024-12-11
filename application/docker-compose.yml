@@ -1,0 +1,62 @@
+services:
+  flask_app_1:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: flask_app_1
+    restart: always
+    environment:
+      FLASK_ENV: development
+      FLASK_APP: run.py
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: postgres
+      MLFLOW_TRACKING_URI: http://172.26.0.1:5003 # mlflow service
+      S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_ACCESS_KEY}
+      GIT_PYTHON_REFRESH: quiet
+
+    networks:
+      - infra_network
+
+  flask_app_2:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: flask_app_2
+    restart: always
+    environment:
+      FLASK_ENV: development
+      FLASK_APP: run.py
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: postgres
+      MLFLOW_TRACKING_URI: http://172.26.0.1:5003 # mlflow service
+      S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_ACCESS_KEY}
+      GIT_PYTHON_REFRESH: quiet
+
+    networks:
+      - infra_network
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    container_name: load_balancer
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - infra_network
+    depends_on:
+      - flask_app_1
+      - flask_app_2
+
+networks:
+  infra_network:
+    external: true

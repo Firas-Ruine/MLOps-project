@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+
+    environment {
+        PYTHON_VERSION = "3.9"
+        GDRIVE_CREDENTIALS = credentials('gdrive-service-account-base64')
+        GITHUB_TOKEN = credentials('7cf55398-2bc5-41a4-8212-1f2751513d6d')
+    }
+
+    stages {
+        stage('Clone GitHub Repository') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "git clone https://$GITHUB_TOKEN@github.com/your-username/your-repo.git /app"
+                """
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "python3 -m pip install --upgrade pip && pip install -r /app/requirements.txt"
+                """
+            }
+        }
+
+        stage('Configure Google Drive Credentials') {
+            steps {
+                sh """
+                echo "${GDRIVE_CREDENTIALS}" | base64 --decode | docker exec -i flask_app_1 sh -c "cat > /app/google_services.json"
+                """
+            }
+        }
+
+        stage('Validate JSON File') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "python3 -m json.tool < /app/google_services.json"
+                """
+            }
+        }
+
+        stage('Pull Dataset') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "cd /app && dvc pull"
+                """
+            }
+        }
+
+        stage('Train the Model') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "cd /app && python3 train.py"
+                """
+            }
+        }
+
+        stage('Push Changes to GitHub') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "cd /app && git add . && git commit -m 'Update artifacts after training' && git push https://$GITHUB_TOKEN@github.com/your-username/your-repo.git"
+                """
+            }
+        }
+
+        stage('Push DVC Artifacts') {
+            steps {
+                sh """
+                docker exec -i flask_app_1 sh -c "cd /app && dvc push"
+                """
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}

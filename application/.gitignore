@@ -1,0 +1,20 @@
+# Data and Dataset Outputs
+data/
+src/dataset/
+src/data_ingestion/facebook_comments/results/
+src/data_ingestion/youtube_comments/results/
+
+# Byte-compiled / Optimized / DLL Files
+__pycache__/
+*.py[cod]
+
+# Test Files and Coverage Reports
+*.pytest_cache
+.coverage
+
+# Environment and Configuration Files
+.env
+google_services.json
+
+# macOS Specific Files
+.DS_Store
