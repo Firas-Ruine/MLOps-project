@@ -97,7 +97,7 @@ jobs:
             docker compose up -d --build
 
             # Run training commands inside the app container
-            docker exec -it flask_app_1 bash -c "
+            docker exec flask_app_1 bash -c "
               cd /app &&
               dvc pull &&
               python src/data_ingestion/youtube_comments/main.py &&
