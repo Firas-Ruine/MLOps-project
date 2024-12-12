@@ -100,7 +100,5 @@ jobs:
               python src/scripts/main.py &&
               python src/models/train_model.py &&
               dvc add data/train.csv &&
-              git add data/train.csv.dvc &&
-              git commit -m 'Update dataset' &&
               dvc push
             "
