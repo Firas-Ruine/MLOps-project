@@ -21,7 +21,7 @@ pipeline {
                 script {
                     // Run data ingestion in one of the Flask containers
                     sh '''
-                        docker exec ${FLASK_APP_1} python src/data_ingestion/youtube_comments/main.py
+                        sudo docker exec ${FLASK_APP_1} python src/data_ingestion/youtube_comments/main.py
                     '''
                 }
             }
@@ -32,7 +32,7 @@ pipeline {
                 script {
                     // Run data cleaning and preprocessing
                     sh '''
-                        docker exec ${FLASK_APP_1} python src/scripts/main.py
+                        sudo docker exec ${FLASK_APP_1} python src/scripts/main.py
                     '''
                 }
             }
@@ -43,10 +43,10 @@ pipeline {
                 script {
                     // Use Docker exec to run DVC commands
                     sh '''
-                        docker exec ${FLASK_APP_1} dvc add data/train.csv
-                        docker exec ${FLASK_APP_1} git add data/train.csv.dvc
-                        docker exec ${FLASK_APP_1} git commit -m "Update training data"
-                        docker exec ${FLASK_APP_1} dvc push
+                       sudo docker exec ${FLASK_APP_1} dvc add data/train.csv
+                       sudo docker exec ${FLASK_APP_1} git add data/train.csv.dvc
+                       sudo docker exec ${FLASK_APP_1} git commit -m "Update training data"
+                       sudo docker exec ${FLASK_APP_1} dvc push
                     '''
                 }
             }
@@ -57,7 +57,7 @@ pipeline {
                 script {
                     // Run model training script
                     sh '''
-                        docker exec ${FLASK_APP_1} python src/models/train_model.py
+                       sudo docker exec ${FLASK_APP_1} python src/models/train_model.py
                     '''
                 }
             }
@@ -68,7 +68,7 @@ pipeline {
                 script {
                     // Log model to MLflow 
                     sh '''
-                        docker exec ${FLASK_APP_1} python src/models/log_model.py
+                       sudo docker exec ${FLASK_APP_1} python src/models/log_model.py
                     '''
                 }
             }
@@ -79,8 +79,8 @@ pipeline {
                 script {
                     // Update model in both Flask containers
                     sh '''
-                        docker cp ${FLASK_APP_1}:/app/models/latest_model.pkl ./latest_model.pkl
-                        docker cp ./latest_model.pkl ${FLASK_APP_2}:/app/models/latest_model.pkl
+                       sudo docker cp ${FLASK_APP_1}:/app/models/latest_model.pkl ./latest_model.pkl
+                       sudo docker cp ./latest_model.pkl ${FLASK_APP_2}:/app/models/latest_model.pkl
                     '''
                 }
             }
