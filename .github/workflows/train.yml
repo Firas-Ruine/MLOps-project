@@ -17,38 +17,48 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python environment
+      # Step 2: Navigate to the application folder
+      - name: Navigate to application folder
+        working-directory: ./application
+        run: echo "Moved to application directory"
+
+      # Step 3: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
-      # Step 3: Install dependencies
+      # Step 4: Install dependencies
       - name: Install dependencies
+        working-directory: ./application
         run: |
           python -m pip install --upgrade pip
           pip install dvc[all]
           pip install -r requirements.txt
 
-      # Step 4: Configure Google Drive credentials
+      # Step 5: Configure Google Drive credentials
       - name: Configure Google Drive credentials
+        working-directory: ./application
         env:
           GDRIVE_SERVICE_ACCOUNT_BASE64: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}
         run: |
           echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > google_services.json
 
-      # Step 5: Configure DVC Remote
+      # Step 6: Configure DVC Remote
       - name: Configure DVC Remote
+        working-directory: ./application
         run: |
           dvc remote modify storage gdrive_use_service_account true
           dvc remote modify --local storage gdrive_service_account_json_file_path google_services.json
 
-      # Step 6: Pull dataset from DVC remote
+      # Step 7: Pull dataset from DVC remote
       - name: Pull dataset
+        working-directory: ./application
         run: dvc pull
 
-      # Step 7: Run DVC-related tasks locally (Optional)
-      - name: Run local data preprocessing
+      # Step 8: Run local preprocessing (Optional)
+      - name: Run local preprocessing
+        working-directory: ./application
         run: |
           python src/data_ingestion/youtube_comments/main.py
           python src/scripts/main.py
@@ -57,7 +67,7 @@ jobs:
           git commit -m "Update dataset"
           dvc push
 
-      # Step 8: Deploy to server
+      # Step 9: Deploy to server
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.9
         with:
@@ -66,17 +76,23 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             set -e
-            # Navigate to the application directory
-            cd docker/experiments/application
+            # Navigate to the application directory on the server
+            cd /docker/experiments/application
 
             # Pull the latest changes
             git pull origin master
 
-            # Rebuild and redeploy the Docker services
+            # Rebuild and redeploy Docker services
+            cd ../infrastructure
             docker compose up -d --build
 
-            # Run data preprocessing and training inside the container
+            # Rebuild the application container
+            cd ../application
+            docker compose up -d --build
+
+            # Run training commands inside the app container
             docker exec -it flask_app_1 bash -c "
+              cd /app &&
               dvc pull &&
               python src/data_ingestion/youtube_comments/main.py &&
               python src/scripts/main.py &&

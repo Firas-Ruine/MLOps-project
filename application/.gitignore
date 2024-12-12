@@ -2,7 +2,6 @@
 data/
 src/dataset/
 src/data_ingestion/facebook_comments/results/
-src/data_ingestion/youtube_comments/results/
 
 # Byte-compiled / Optimized / DLL Files
 __pycache__/
