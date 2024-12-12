@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y git
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install DVC
+RUN pip install dvc[all]
+
 COPY . .
 
 EXPOSE 5000
