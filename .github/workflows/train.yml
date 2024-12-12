@@ -85,7 +85,7 @@ jobs:
             git pull origin master
 
             # Rebuild and redeploy Docker services
-            cd ../infrastructure
+            cd infrastructure
             docker compose up -d --build
 
             # Rebuild and redeploy Application services
