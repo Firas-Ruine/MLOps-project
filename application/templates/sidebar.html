@@ -1,13 +1,18 @@
 <style>
-.sidebar {
+  .sidebar {
     background-color: #343a40;
     color: #fff;
     height: 100vh;
     padding: 15px;
     position: fixed;
     top: 0;
-    left: 0;
+    left: -250px;
     width: 250px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+  .sidebar.active {
+    left: 0;
   }
   .sidebar a {
     color: #ddd;
@@ -21,10 +26,71 @@
   .sidebar a:hover {
     background-color: #495057;
   }
+  .sidebar-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1100;
+  }
+  .sidebar-toggle:hover {
+    background-color: #495057;
+  }
+  .close-sidebar {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .close-sidebar:hover {
+    color: #dc3545;
+  }
+  @media (min-width: 768px) {
+    .close-sidebar {
+      display: none;
+    }
+    .sidebar {
+      left: 0;
+    }
+    .sidebar-toggle {
+      display: none;
+    }
+  }
 </style>
-<div class="sidebar">
+
+<body>
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <div class="sidebar">
+    <button class="close-sidebar" onclick="toggleSidebar()">×</button>
     <h4 class="text-white">Navigation</h4>
     <a href="/">Home</a>
-    <a href="/youtube">youtube</a>
-    <a href="/facebook">facebook</a>
-</div>
+    <a href="/youtube">YouTube</a>
+    <a href="/facebook">Facebook</a>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const content = document.getElementById('main-content');
+      const toggleButton = document.querySelector('.sidebar-toggle');
+      sidebar.classList.toggle('active');
+      if (sidebar.classList.contains('active')) {
+        content.style.marginLeft = '250px';
+        toggleButton.style.display = 'none';
+      } else {
+        content.style.marginLeft = '0';
+        toggleButton.style.display = 'block';
+      }
+    }
+  </script>
+</body>

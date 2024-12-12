@@ -49,12 +49,23 @@
     .neutral {
       color: #6c757d;
     }
+    .main-container {
+      margin-left: 270px;
+    }
+    @media (max-width: 768px) {
+      body {
+        margin-top: 50px;
+      }
+      .main-container {
+        margin-left: 0;
+      }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   {% include 'sidebar.html' %}
-  <div class="container-fluid py-4" style="margin-left: 270px;">
+  <div class="container-fluid py-4 main-container" id="main-content">
     <div class="row min-vh-80 h-100">
       <div class="col-12">
         <form action="/youtube" method="POST" class="shadow p-4 rounded bg-white">
