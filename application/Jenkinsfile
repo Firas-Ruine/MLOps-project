@@ -41,7 +41,7 @@ pipeline {
         stage('Data Preprocessing') {
             steps {
                 script {
-                    // Run data cleaning and preprocessing script
+                    // Run data cleaning and preprocessing
                     sh '''
                         docker exec ${FLASK_APP_1} python src/scripts/main.py
                     '''
