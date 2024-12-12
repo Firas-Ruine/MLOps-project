@@ -79,7 +79,7 @@ jobs:
             set -e
 
             # Navigate to the application directory on the server
-            cd docker/experiments/application
+            cd docker/experiments
 
             # Pull the latest changes
             git pull origin master
