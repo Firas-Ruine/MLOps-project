@@ -1,7 +1,7 @@
 # Data and Dataset Outputs
-data/
 src/dataset/
 src/data_ingestion/facebook_comments/results/
+data/train.csv
 
 # Byte-compiled / Optimized / DLL Files
 __pycache__/
