@@ -16,19 +16,25 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
+      
+      # Step 2: Set up Git user identity
+      - name: Configure Git User
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
-      # Step 2: Navigate to the application folder
+      # Step 3: Navigate to the application folder
       - name: Navigate to application folder
         working-directory: ./application
         run: echo "Moved to application directory"
 
-      # Step 3: Set up Python environment
+      # Step 4: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
-      # Step 4: Install dependencies
+      # Step 5: Install dependencies
       - name: Install dependencies
         working-directory: ./application
         run: |
@@ -36,7 +42,7 @@ jobs:
           pip install dvc[all]
           pip install -r requirements.txt
 
-      # Step 5: Configure Google Drive credentials
+      # Step 6: Configure Google Drive credentials
       - name: Configure Google Drive credentials
         working-directory: ./application
         env:
@@ -44,19 +50,19 @@ jobs:
         run: |
           echo "${{ secrets.GDRIVE_SERVICE_ACCOUNT_BASE64 }}" | base64 --decode > google_services.json
 
-      # Step 6: Configure DVC Remote
+      # Step 7: Configure DVC Remote
       - name: Configure DVC Remote
         working-directory: ./application
         run: |
           dvc remote modify storage gdrive_use_service_account true
           dvc remote modify --local storage gdrive_service_account_json_file_path google_services.json
 
-      # Step 7: Pull dataset from DVC remote
+      # Step 8: Pull dataset from DVC remote
       - name: Pull dataset
         working-directory: ./application
         run: dvc pull
 
-      # Step 8: Run local preprocessing (Optional)
+      # Step 9: Run local preprocessing (Optional)
       - name: Run local preprocessing
         working-directory: ./application
         run: |
@@ -67,7 +73,7 @@ jobs:
           git commit -m "Update dataset"
           dvc push
 
-      # Step 9: Deploy to server
+      # Step 10: Deploy to server
       - name: Deploy to server
         uses: appleboy/ssh-action@v0.1.9
         with:
