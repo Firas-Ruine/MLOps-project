@@ -16,7 +16,7 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+
       # Step 2: Set up Git user identity
       - name: Configure Git User
         run: |
@@ -83,7 +83,7 @@ jobs:
           script: |
             set -e
             # Navigate to the application directory on the server
-            cd /docker/experiments/application
+            cd docker/experiments/application
 
             # Pull the latest changes
             git pull origin master
