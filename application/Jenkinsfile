@@ -16,17 +16,6 @@ pipeline {
             }
         }
         
-        stage('Prepare Environment') {
-            steps {
-                script {
-                    // Ensure Docker network exists
-                    sh '''
-                        docker network inspect ${DOCKER_NETWORK} || docker network create ${DOCKER_NETWORK}
-                    '''
-                }
-            }
-        }
-        
         stage('Data Ingestion') {
             steps {
                 script {
